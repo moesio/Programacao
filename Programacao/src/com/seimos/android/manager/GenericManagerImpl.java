@@ -10,7 +10,7 @@ import com.seimos.android.dao.GenericDao;
  * @author moesio @ gmail.com
  * @date Jul 28, 2015 5:43:31 PM
  */
-public abstract class GenericManagerImpl<Entity extends com.seimos.android.database.Entity, Dao extends GenericDao<Entity>> implements GenericManager<Entity> {
+public abstract class GenericManagerImpl<Entity extends com.seimos.android.database.BaseEntity, Dao extends GenericDao<Entity>> implements GenericManager<Entity> {
 
 	public abstract GenericDao<Entity> getDao();
 

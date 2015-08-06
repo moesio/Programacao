@@ -2,7 +2,6 @@ package com.seimos.programacao;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 import android.app.Activity;
@@ -170,7 +169,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			return fragment;
 		}
 
-		private PessoaManagerImpl pessoaManager;
+		private PessoaManager pessoaManager;
+		private ApoioManager apoioManager;
 
 		public PlaceholderFragment() {
 		}
@@ -225,6 +225,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		private void instantiateManagers() {
 			pessoaManager = new PessoaManagerImpl(getActivity());
+			apoioManager = new ApoioManagerImpl(getActivity());
 		}
 
 		private void populateParticipacao(View rootView) {
@@ -249,17 +250,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			TextView textViewVolante2 = (TextView) rootView.findViewById(R.id.textViewVolante2);
 
 			try {
-				ApoioManager apoioManager = new ApoioManagerImpl(getActivity());
-				Apoio apoio = apoioManager.retrieve(new Date());
+				Date date = new Date(); //new GregorianCalendar(2015, 9, 1).getTime();
+				Apoio apoio = apoioManager.retrieveDesignacaoSemana(date);
+				
+//				apoioManager.create(new Apoio().setData(date).setIndicador(new Pessoa().setId(1)).setLimpeza(1).setPalco(new Pessoa().setId(2)).setSom(new Pessoa().setId(3)).setVolante1(new Pessoa().setId(4)).setVolante2(new Pessoa().setId(5)));
 
-				PessoaManager pessoaManager = new PessoaManagerImpl(getActivity());
-
-				textViewLimpeza.setText(apoio.getLimpeza());
-				textViewIndicador.setText(pessoaManager.retrieve(apoio.getIndicador()).getNome());
-				textViewSom.setText(pessoaManager.retrieve(apoio.getSom()).getNome());
-				textViewPalco.setText(pessoaManager.retrieve(apoio.getPalco()).getNome());
-				textViewVolante1.setText(pessoaManager.retrieve(apoio.getVolante1()).getNome());
-				textViewVolante2.setText(pessoaManager.retrieve(apoio.getVolante2()).getNome());
+				textViewLimpeza.setText(apoio.getLimpeza().toString());
+				textViewIndicador.setText(pessoaManager.retrieve(apoio.getIndicador().getId()).getNome());
+				textViewSom.setText(pessoaManager.retrieve(apoio.getSom().getId()).getNome());
+				textViewPalco.setText(pessoaManager.retrieve(apoio.getPalco().getId()).getNome());
+				textViewVolante1.setText(pessoaManager.retrieve(apoio.getVolante1().getId()).getNome());
+				textViewVolante2.setText(pessoaManager.retrieve(apoio.getVolante2().getId()).getNome());
 			} catch (Exception e) {
 				int i = 0;
 			}

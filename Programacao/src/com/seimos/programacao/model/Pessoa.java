@@ -3,13 +3,13 @@ package com.seimos.programacao.model;
 import java.util.Date;
 
 import com.seimos.android.annotation.Id;
-import com.seimos.android.database.Entity;
+import com.seimos.android.database.BaseEntity;
 
 /**
  * @author moesio @ gmail.com
  * @date Jul 16, 2015 11:49:51 PM
  */
-public class Pessoa extends Entity {
+public class Pessoa extends BaseEntity {
 	@Id
 	private Integer id;
 	private String nome;

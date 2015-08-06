@@ -6,12 +6,12 @@ import java.util.List;
 import java.util.Locale;
 
 import com.seimos.android.annotation.Id;
-import com.seimos.android.database.Entity;
+import com.seimos.android.database.BaseEntity;
 
 public class Reflection {
 
 	public static boolean isEntity(Object entity) {
-		return entity instanceof Entity;
+		return entity instanceof BaseEntity;
 	}
 
 	public static String getGetter(Field field) {

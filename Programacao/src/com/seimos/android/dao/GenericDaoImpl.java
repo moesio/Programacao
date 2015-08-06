@@ -4,19 +4,24 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.text.format.DateFormat;
 import android.util.Log;
 
+import com.seimos.android.database.BaseEntity;
 import com.seimos.android.database.DatabaseUtil;
+import com.seimos.android.database.Filter;
+import com.seimos.android.database.FilterManager;
 import com.seimos.android.util.Reflection;
 import com.seimos.programacao.R;
 
@@ -24,7 +29,7 @@ import com.seimos.programacao.R;
  * @author moesio @ gmail.com
  * @date Jul 28, 2015 5:47:59 PM
  */
-public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.Entity> implements GenericDao<Entity> {
+public abstract class GenericDaoImpl<Entity extends BaseEntity> implements GenericDao<Entity> {
 
 	private Context context;
 	private Class<Entity> entityClass;
@@ -67,6 +72,8 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 					values.put(databaseFieldName, (Integer) invoke);
 				} else if (field.getType() == Boolean.class) {
 					values.put(databaseFieldName, (Boolean) invoke);
+				} else if (field.getType() == Date.class) {
+					values.put(databaseFieldName, Filter.getStringValue(invoke));
 				} else {
 					values.put(databaseFieldName, (String) invoke);
 				}
@@ -83,9 +90,7 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 		List<Entity> list = new ArrayList<Entity>();
 		if (cursor.moveToFirst()) {
 			do {
-				Entity entity = entityClass.newInstance();
-				createEntityFromCursor(cursor, entity);
-				list.add(entity);
+				list.add(createEntityFromCursor(cursor));
 			} while (cursor.moveToNext());
 		} else {
 			list = Collections.emptyList();
@@ -93,7 +98,9 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 		return (List<Entity>) list;
 	}
 
-	private void createEntityFromCursor(Cursor cursor, Entity entity) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+	@SuppressLint("SimpleDateFormat")
+	private Entity createEntityFromCursor(Cursor cursor) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+		Entity entity = entityClass.newInstance();
 		String[] columnNames = cursor.getColumnNames();
 		for (String columnName : columnNames) {
 			try {
@@ -107,15 +114,25 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 					method.invoke(entity, cursor.getInt(cursor.getColumnIndex(columnName)));
 				} else if (type == String.class) {
 					method.invoke(entity, cursor.getString(cursor.getColumnIndex(columnName)));
+				} else if (type == Date.class) {
+					String value = cursor.getString(cursor.getColumnIndex(columnName));
+					Date date = null;
+					try {
+						date = new SimpleDateFormat("yyyy-MM-dd").parse(value);
+					} catch (ParseException e) {
+					}
+					method.invoke(entity, date);
 				} else {
-					com.seimos.android.database.Entity association = (com.seimos.android.database.Entity) type.newInstance();
+					com.seimos.android.database.BaseEntity association = (com.seimos.android.database.BaseEntity) type.newInstance();
 					Method methodAssociation = association.getClass().getMethod(Reflection.getSetter(Reflection.getIdField(association.getClass()).getName()), Integer.class);
 					methodAssociation.invoke(association, cursor.getInt(cursor.getColumnIndex(columnName)));
 					method.invoke(entity, association);
+
 				}
 			} catch (NoSuchFieldException e) {
 			}
 		}
+		return entity;
 	}
 
 	public boolean create(Entity entity) {
@@ -132,7 +149,7 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 		Cursor cursor;
 		try {
 			Field idField = Reflection.getIdField(entityClass);
-			String idValue = (idField.getType() == Date.class) ? ((String) DateFormat.format("yyyy-MM-dd", (Date) id)) : (id.toString());
+			String idValue = Filter.getStringValue(id);
 			String idFieldName = idField.getName();
 			cursor = database.query(getTableName(), getColumns(), idFieldName + " = ?", new String[] { idValue }, null, null, idFieldName, "1");
 			list = extract(cursor);
@@ -148,11 +165,15 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 	}
 
 	public List<Entity> list() {
+		return filter();
+	}
+
+	public List<Entity> filter(Filter... filters) {
 		SQLiteDatabase database = DatabaseUtil.openForRead(context);
 		List<Entity> list = new ArrayList<Entity>();
 		Cursor cursor;
 		try {
-			cursor = database.query(getTableName(), getColumns(), null, null, null, null, null);
+			cursor = database.query(getTableName(), getColumns(), FilterManager.getSelection(filters), FilterManager.getArgs(filters), null, null, null);
 			list = extract(cursor);
 		} catch (Exception e) {
 			Log.e(context.getString(R.string.app_name), "Erro na criação da lista!");
@@ -182,4 +203,5 @@ public abstract class GenericDaoImpl<Entity extends com.seimos.android.database.
 		database.close();
 		return affectedRows > 0;
 	}
+
 }
