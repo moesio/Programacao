@@ -253,14 +253,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				Date date = new Date(); //new GregorianCalendar(2015, 9, 1).getTime();
 				Apoio apoio = apoioManager.retrieveDesignacaoSemana(date);
 				
-//				apoioManager.create(new Apoio().setData(date).setIndicador(new Pessoa().setId(1)).setLimpeza(1).setPalco(new Pessoa().setId(2)).setSom(new Pessoa().setId(3)).setVolante1(new Pessoa().setId(4)).setVolante2(new Pessoa().setId(5)));
-
 				textViewLimpeza.setText(apoio.getLimpeza().toString());
-				textViewIndicador.setText(pessoaManager.retrieve(apoio.getIndicador().getId()).getNome());
-				textViewSom.setText(pessoaManager.retrieve(apoio.getSom().getId()).getNome());
-				textViewPalco.setText(pessoaManager.retrieve(apoio.getPalco().getId()).getNome());
-				textViewVolante1.setText(pessoaManager.retrieve(apoio.getVolante1().getId()).getNome());
-				textViewVolante2.setText(pessoaManager.retrieve(apoio.getVolante2().getId()).getNome());
+				textViewIndicador.setText(apoio.getIndicador().getNome());
+				textViewSom.setText(apoio.getSom().getNome());
+				textViewPalco.setText(apoio.getPalco().getNome());
+				textViewVolante1.setText(apoio.getVolante1().getNome());
+				textViewVolante2.setText(apoio.getVolante2().getNome());
 			} catch (Exception e) {
 				int i = 0;
 			}

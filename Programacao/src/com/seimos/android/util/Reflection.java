@@ -13,6 +13,15 @@ public class Reflection {
 	public static boolean isEntity(Object entity) {
 		return entity instanceof BaseEntity;
 	}
+	
+	public static boolean isEntity(Class<?> clazz) {
+		try {
+			clazz.asSubclass(BaseEntity.class);
+			return true;
+		} catch (ClassCastException e) {
+			return false;
+		}
+	}
 
 	public static String getGetter(Field field) {
 		String fieldName = field.getName();
