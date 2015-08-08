@@ -24,6 +24,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.seimos.android.database.Restriction;
 import com.seimos.programacao.db.Dao;
 import com.seimos.programacao.db.Dao.Field;
 import com.seimos.programacao.manager.ApoioManager;
@@ -211,7 +212,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 				populateEstudoSentinelaLayout(rootView);
 				break;
 			case 8:
-				rootView = inflater.inflate(R.layout.lista_pessoas, container, false);
+				rootView = inflater.inflate(R.layout.cadastrar_pessoas, container, false);
 				populateCadastrarPessoa(rootView);
 				break;
 			case 9:
@@ -229,16 +230,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 
 		private void populateParticipacao(View rootView) {
-			ListView listPessoas = (ListView) rootView.findViewById(R.id.list_pessoa);
-			
-			List<Pessoa> list = pessoaManager.list();
-			String[] pessoas = new String[list.size()];
-			
-			for (int i = 0; i < list.size(); i++) {
-				pessoas[i] = list.get(i).getNome();
-			}
-			
-			listPessoas.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas) );
 		}
 
 		private void populateApoioLayout(View rootView) {
@@ -351,6 +342,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 
 		private void populateCadastrarPessoa(View rootView) {
+			final ListView listPessoas = (ListView) rootView.findViewById(R.id.list_pessoa);
+			
+			updateListPessoas(listPessoas);
+			
 			final EditText editNome = (EditText) rootView.findViewById(R.id.editNome);
 			Button btnCadastrarPessoa = (Button) rootView.findViewById(R.id.btnSalvar);
 			btnCadastrarPessoa.setOnClickListener(new OnClickListener() {
@@ -359,11 +354,23 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					if (pessoaManager.create(new Pessoa().setNome(editNome.getText().toString()))) {
 						Toast.makeText(getActivity(), "Sucesso!", Toast.LENGTH_SHORT).show();
 						editNome.setText("");
+						updateListPessoas(listPessoas);
 					} else {
 						Toast.makeText(getActivity(), "Erro!", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
+		}
+
+		private void updateListPessoas(ListView listPessoas) {
+			List<Pessoa> list = pessoaManager.listSorted();
+			String[] pessoas = new String[list.size()];
+			
+			for (int i = 0; i < list.size(); i++) {
+				pessoas[i] = list.get(i).getNome();
+			}
+			
+			listPessoas.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas) );
 		}
 
 		private void populateCriarProgramacaoLayout(View rootView) {

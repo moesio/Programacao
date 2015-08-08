@@ -116,6 +116,8 @@ public class EntityHandler {
 					}
 					method.invoke(entity, date);
 				} else {
+					// TODO Test deep associations more than one level, ie, nested association
+					
 					BaseEntity association = (BaseEntity) type.newInstance();
 					Method methodAssociation = association.getClass().getMethod(Reflection.getSetter(Reflection.getIdField(association.getClass()).getName()), Integer.class);
 					// TODO Verify when id field is not an Integer

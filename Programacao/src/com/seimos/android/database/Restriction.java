@@ -12,5 +12,5 @@ public enum Restriction {
 		}
 	};
 
-	public abstract String getOperand() ;
+	public abstract String getOperand();
 }

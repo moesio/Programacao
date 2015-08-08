@@ -80,7 +80,9 @@ public abstract class GenericDaoImpl<Entity extends BaseEntity> implements Gener
 		Cursor cursor;
 		List<BaseEntity> list = new ArrayList<BaseEntity>();
 		try {
-			cursor = database.query(entityHandler.getTableName(), entityHandler.getColumns(), FilterManager.getSelection(filters), FilterManager.getArgs(filters), null, null, null);
+			FilterManager filterManager = new FilterManager(filters);
+			String orderBy = filterManager.getOrderBy();
+			cursor = database.query(entityHandler.getTableName(), entityHandler.getColumns(), filterManager.getSelection(), filterManager.getArgs(), null, null, orderBy);
 			list = entityHandler.extract(cursor);
 		} catch (Exception e) {
 			Log.e(context.getString(R.string.app_name), "Erro na criação da lista!");
