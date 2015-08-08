@@ -24,7 +24,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.seimos.android.database.Restriction;
 import com.seimos.programacao.db.Dao;
 import com.seimos.programacao.db.Dao.Field;
 import com.seimos.programacao.manager.ApoioManager;
@@ -33,6 +32,7 @@ import com.seimos.programacao.manager.PessoaManager;
 import com.seimos.programacao.manager.PessoaManagerImpl;
 import com.seimos.programacao.model.Apoio;
 import com.seimos.programacao.model.Pessoa;
+import com.seimos.programacao.ui.ListPessoasAdapter;
 
 @SuppressWarnings("deprecation")
 public class MainActivity extends ActionBarActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {
@@ -46,7 +46,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,7 +178,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 			instantiateManagers();
-			
+
 			View rootView = null;
 
 			switch (section) {
@@ -243,7 +242,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			try {
 				Date date = new Date(); //new GregorianCalendar(2015, 9, 1).getTime();
 				Apoio apoio = apoioManager.retrieveDesignacaoSemana(date);
-				
+
 				textViewLimpeza.setText(apoio.getLimpeza().toString());
 				textViewIndicador.setText(apoio.getIndicador().getNome());
 				textViewSom.setText(apoio.getSom().getNome());
@@ -343,9 +342,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		private void populateCadastrarPessoa(View rootView) {
 			final ListView listPessoas = (ListView) rootView.findViewById(R.id.list_pessoa);
-			
+			List<Pessoa> list = pessoaManager.listSorted();
+			listPessoas.setAdapter(new ListPessoasAdapter(getActivity(), list));
 			updateListPessoas(listPessoas);
-			
+
 			final EditText editNome = (EditText) rootView.findViewById(R.id.editNome);
 			Button btnCadastrarPessoa = (Button) rootView.findViewById(R.id.btnSalvar);
 			btnCadastrarPessoa.setOnClickListener(new OnClickListener() {
@@ -365,12 +365,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		private void updateListPessoas(ListView listPessoas) {
 			List<Pessoa> list = pessoaManager.listSorted();
 			String[] pessoas = new String[list.size()];
-			
+
 			for (int i = 0; i < list.size(); i++) {
 				pessoas[i] = list.get(i).getNome();
 			}
-			
-			listPessoas.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas) );
+
+			listPessoas.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas));
 		}
 
 		private void populateCriarProgramacaoLayout(View rootView) {

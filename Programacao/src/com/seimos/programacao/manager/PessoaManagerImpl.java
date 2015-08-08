@@ -33,6 +33,5 @@ public class PessoaManagerImpl extends GenericManagerImpl<Pessoa, PessoaDao> imp
 	@Override
 	public List<Pessoa> listSorted() {
 		return getDao().filter(new Filter(new OrderBy("nome")));
-//		return getDao().list();
 	}
 }
