@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">Programação</string>
-    <string name="section_eu">Designações</string>
+    <string name="section_participacao">Participação</string>
     <string name="section_apoio">Apoio</string>
     <string name="section_estudo_biblico">Estudo Bíblico</string>
     <string name="section_escola">Escola</string>
@@ -29,5 +29,6 @@
     <string name="lbl_cadastrar_pessoa">Cadastrar pessoa</string>
     <string name="lbl_nome">Nome</string>
     <string name="lbl_salvar">Salvar</string>
+    <string name="select_prompt">Selecione alguém&#8230;</string>
 
 </resources>

@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.SectionIndexer;
 import android.widget.TextView;
 
 import com.seimos.programacao.model.Pessoa;
@@ -17,7 +18,7 @@ import com.seimos.programacao.model.Pessoa;
  * @author moesio @ gmail.com
  * @date Aug 8, 2015 12:50:47 PM
  */
-public class ListPessoasAdapter extends BaseAdapter {
+public class ListPessoasAdapter extends BaseAdapter implements SectionIndexer {
 
 	private FragmentActivity context;
 	private List<Pessoa> list;
@@ -53,5 +54,20 @@ public class ListPessoasAdapter extends BaseAdapter {
 		textView.setText(pessoa.getNome());
 
 		return textView;
+	}
+
+	@Override
+	public Object[] getSections() {
+		return new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z" };
+	}
+
+	@Override
+	public int getPositionForSection(int sectionIndex) {
+		return sectionIndex / getSections().length * list.size();
+	}
+
+	@Override
+	public int getSectionForPosition(int position) {
+		return position / list.size() * getSections().length ;
 	}
 }

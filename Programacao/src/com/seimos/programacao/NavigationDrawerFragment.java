@@ -22,6 +22,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.seimos.programacao.ui.MenuPrincipal;
+
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
  * See the <a href="https://developer.android.com/design/patterns/navigation-drawer.html#Interaction">
@@ -95,16 +97,7 @@ public class NavigationDrawerFragment extends Fragment {
 				selectItem(position);
 			}
 		});
-		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, new String[] {
-				getString(R.string.section_eu),
-				getString(R.string.section_apoio),
-				getString(R.string.section_estudo_biblico),
-				getString(R.string.section_escola),
-				getString(R.string.section_servico),
-				getString(R.string.section_discurso),
-				getString(R.string.section_estudo_sentinela),
-				getString(R.string.section_cadastrar),
-				getString(R.string.section_criar_programacao) }));
+		mDrawerListView.setAdapter(new ArrayAdapter<String>(getActionBar().getThemedContext(), android.R.layout.simple_list_item_1, android.R.id.text1, MenuPrincipal.getItems(getActivity())));
 		mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
 		return mDrawerListView;
 	}
