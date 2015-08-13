@@ -2,30 +2,37 @@ package com.seimos.programacao.ui;
 
 import java.util.List;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.SectionIndexer;
 import android.widget.TextView;
 
+import com.seimos.programacao.manager.PessoaManagerImpl;
 import com.seimos.programacao.model.Pessoa;
 
 /**
  * @author moesio @ gmail.com
  * @date Aug 8, 2015 12:50:47 PM
  */
-public class ListPessoasAdapter extends BaseAdapter implements SectionIndexer {
+public class ListPessoasAdapter extends ArrayAdapter<Pessoa> implements SectionIndexer {
 
-	private FragmentActivity context;
+	private Context context;
 	private List<Pessoa> list;
+	private PessoaManagerImpl manager;
 
-	public ListPessoasAdapter(FragmentActivity context, List<Pessoa> list) {
+	public ListPessoasAdapter(Context context) {
+		super(context, android.R.layout.simple_list_item_1);
 		this.context = context;
-		this.list = list;
+		manager = new PessoaManagerImpl(context);
+		list = manager.listSorted();
+	}
+
+	public void refresh() {
+		list = manager.listSorted();
+		notifyDataSetChanged();
 	}
 
 	@Override
@@ -34,8 +41,8 @@ public class ListPessoasAdapter extends BaseAdapter implements SectionIndexer {
 	}
 
 	@Override
-	public Object getItem(int position) {
-		return list.get(position);
+	public Pessoa getItem(int position) {
+		return new PessoaItemLista(list.get(position));
 	}
 
 	@Override
@@ -43,16 +50,18 @@ public class ListPessoasAdapter extends BaseAdapter implements SectionIndexer {
 		return list.get(position).getId();
 	}
 
-	@SuppressLint("ViewHolder")
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		Pessoa pessoa = list.get(position);
 
-		LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		TextView textView = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, parent);
+		TextView textView = (TextView) convertView;
+		if (convertView == null) {
+			LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			textView = (TextView) inflater.inflate(android.R.layout.simple_list_item_1, parent, false);
+		}
+
 		textView.setTag(pessoa);
 		textView.setText(pessoa.getNome());
-
 		return textView;
 	}
 
@@ -68,6 +77,20 @@ public class ListPessoasAdapter extends BaseAdapter implements SectionIndexer {
 
 	@Override
 	public int getSectionForPosition(int position) {
-		return position / list.size() * getSections().length ;
+		return position / list.size() * getSections().length;
+	}
+
+}
+
+class PessoaItemLista extends Pessoa {
+
+	public PessoaItemLista(Pessoa pessoa) {
+		setId(pessoa.getId());
+		setNome(pessoa.getNome());
+	}
+
+	@Override
+	public String toString() {
+		return getNome();
 	}
 }

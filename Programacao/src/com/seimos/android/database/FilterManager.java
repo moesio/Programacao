@@ -37,7 +37,7 @@ public class FilterManager {
 						argsBuilder.add(arg);
 					}
 					
-					if (i < filters.length) {
+					if (i < (filters.length - 1)) {
 						selectionBuilder.append(", ");
 					}
 				}
@@ -46,6 +46,7 @@ public class FilterManager {
 				this.selection = selectionBuilder.toString();
 			}
 			if (argsBuilder.size() > 0) {
+				args = new String[argsBuilder.size()];
 				argsBuilder.toArray(args);
 			}
 		}

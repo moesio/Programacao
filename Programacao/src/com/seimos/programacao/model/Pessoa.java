@@ -1,7 +1,5 @@
 package com.seimos.programacao.model;
 
-import java.util.Date;
-
 import com.seimos.android.annotation.Id;
 import com.seimos.android.database.BaseEntity;
 

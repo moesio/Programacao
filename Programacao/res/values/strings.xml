@@ -30,5 +30,7 @@
     <string name="lbl_nome">Nome</string>
     <string name="lbl_salvar">Salvar</string>
     <string name="select_prompt">Selecione alguém&#8230;</string>
+    <string name="ok">Ok</string>
+    <string name="cancelar">Cancelar</string>
 
 </resources>

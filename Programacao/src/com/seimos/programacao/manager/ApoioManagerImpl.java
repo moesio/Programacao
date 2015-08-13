@@ -1,6 +1,8 @@
 package com.seimos.programacao.manager;
 
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import android.content.Context;
@@ -33,11 +35,26 @@ public class ApoioManagerImpl extends GenericManagerImpl<Apoio, ApoioDao> implem
 
 	@Override
 	public Apoio retrieveDesignacaoSemana(Date data) {
-		List<Apoio> list = getDao().filter(new Filter("data", data, Restriction.GE));
+		List<Apoio> list = getDao().filter(new Filter("data", transformToMonday(data), Restriction.GE));
 		if (list.size() > 0){
 			return list.get(0); 
 		} else {
 			return null;
 		}
+	}
+	
+	@Override
+	public boolean create(Apoio apoio) {
+		if (apoio.getData() != null) {
+			apoio.setData(transformToMonday(apoio.getData()));
+		}
+		return super.create(apoio);
+	}
+
+	private Date transformToMonday(Date data) {
+		GregorianCalendar calendar = new GregorianCalendar(data.getYear(), data.getMonth(), data.getDate());
+		int dow = calendar.get(Calendar.DAY_OF_WEEK);
+		calendar.add(Calendar.DAY_OF_MONTH, 2 - dow);
+		return calendar.getTime();
 	}
 }

@@ -12,70 +12,29 @@
         <item>CREATE TABLE IF NOT EXISTS discurso_publico (data DATE PRIMARY KEY NOT NULL, tema VARCHAR NOT NULL, orador VARCHAR NOT NULL, congregacao VARCHAR NOT NULL, presidente INTEGER NOT NULL REFERENCES pessoa (id) ON DELETE RESTRICT);</item>
         <item>CREATE TABLE IF NOT EXISTS estudo_sentinela (data DATE PRIMARY KEY NOT NULL, tema VARCHAR NOT NULL, materia VARCHAR NOT NULL, leitor INTEGER NOT NULL REFERENCES pessoa (id) ON DELETE RESTRICT);</item>
         <!-- <item>CREATE TABLE IF NOT EXISTS semana (data DATE PRIMARY KEY NOT NULL, data DATE NOT NULL, apoio INTEGER NOT NULL REFERENCES apoio (id) ON DELETE RESTRICT, estudo_biblico INTEGER NOT NULL REFERENCES estudo_biblico (id) ON DELETE RESTRICT, escola INTEGER NOT NULL REFERENCES escola (id) ON DELETE RESTRICT, servico INTEGER NOT NULL REFERENCES servico (id) ON DELETE RESTRICT, discurso_publico INTEGER NOT NULL REFERENCES discurso_publico (id) ON DELETE RESTRICT, estudo_sentinela INTEGER NOT NULL REFERENCES estudo_sentinela (id) ON DELETE RESTRICT);</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (1, \'Moésio Medeiros\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (2, \'Januário José\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (3, \'Kende Paula\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (4, \'Regilson Freitas\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (5, \'Antonio Martins\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (6, \'Robson Martins\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (7, \'Francisco Viana\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (8, \'Leonardo Araújo\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (9, \'Marcos Éber\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (10, \'Jordana Ribeiro\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (11, \'Valdenice Souza\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (12, \'Airton Santos\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (13, \'Aurélio Ribeiro\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (14, \'Airton França\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (15, \'Alex Leal\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (16, \'Ocivan Santiago\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (17, \'Rodrigo Martins\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (18, \'Fabiano Queiroz\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (19, \'Kersia Araújo\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (20, \'Zenice de Souza\');</item> -->
-        <!-- <item>insert into pessoa (id, nome) values (21, \'Francisca Martins\');</item> -->
-
-        <!-- <item>insert into apoio values (\'2015-07-27\', 1, 17, 3, 1, 6, 12);</item> -->
-
-        <!-- <item>insert into estudo_biblico values (\'2015-07-27\', \'Achegue-se a Jeová\', \'cl cap. 28 §§ 10-17\', 18, 3);</item> -->
-
-        <!-- <item>insert into escola values (\'2015-07-27\', \'1 Reis 18-20\', 1, \'1 Reis 18:30-40\', 6, 1, \'Débora (n.° 2) — Tema: Mulheres fiéis louvam a Jeová\', \'it-1 pp. 670-671\', 19, 20, 2, 2, \'Como a Bíblia pode ajudar filhos?\', \'igw p. 27 §§ 1-2\', 5, 21, 3, 3);</item> -->
-
-        <!-- <item>insert into servico values (\'2015-07-27\', \'Ofereça as revistas em agosto\', 7, \'Tire proveito do livreto Examine as Escrituras Diariamente\', 16, \'Necessidades locais\', 14, 14);</item> -->
-
-        <!-- <item>insert into discurso_publico values (\'2015-07-27\', \'Guarda ressentimento ou é perdoador?\', \'Érico Teles\', \'Água Fria\', 5);</item> -->
-
-        <!-- <item>insert into estudo_sentinela values (\'2015-07-27\', \'Ele amava as pessoas\', \'w15 15/6 pp. 8-12\', 4);</item> -->
-
+        <item>insert into pessoa (nome) values (\'Moésio Medeiros\')
+        , (\'Januário José\')
+        , (\'Kende Paula\')
+        , (\'Regilson Freitas\')
+        , (\'Antonio Martins\')
+        , (\'Robson Martins\')
+        , (\'Francisco Viana\')
+        , (\'Leonardo Araújo\')
+        , (\'Marcos Éber\')
+        , (\'Jordana Ribeiro\')
+        , (\'Valdenice Souza\')
+        , (\'Airton Santos\')
+        , (\'Aurélio Ribeiro\')
+        , (\'Airton França\')
+        , (\'Alex Leal\')
+        , (\'Ocivan Santiago\')
+        , (\'Rodrigo Martins\')
+        , (\'Fabiano Queiroz\')
+        , (\'Kersia Araújo\')
+        , (\'Zenice de Souza\')
+        , (\'Francisca Martins\');</item>
     </string-array>
     <string-array name="table_upgrade">
-<!--         <item> -->
-<!--             insert into pessoa (id, nome) values (1, \'Moésio Medeiros\'); -->
-<!--         insert into pessoa (id, nome) values (2, \'Januário José\'); -->
-<!--         insert into pessoa (id, nome) values (3, \'Kende Paula\'); -->
-<!--         insert into pessoa (id, nome) values (4, \'Regilson Freitas\'); -->
-<!--         insert into pessoa (id, nome) values (5, \'Antonio Martins\'); -->
-<!--         insert into pessoa (id, nome) values (6, \'Robson Martins\'); -->
-<!--         insert into pessoa (id, nome) values (7, \'Francisco Viana\'); -->
-<!--         insert into pessoa (id, nome) values (8, \'Leonardo Araújo\'); -->
-<!--         insert into pessoa (id, nome) values (9, \'Marcos Éber\'); -->
-<!--         insert into pessoa (id, nome) values (10, \'Jordana Ribeiro\'); -->
-<!--         insert into pessoa (id, nome) values (11, \'Valdenice Souza\'); -->
-<!--         insert into pessoa (id, nome) values (12, \'Airton Santos\'); -->
-<!--         insert into pessoa (id, nome) values (13, \'Aurélio Ribeiro\'); -->
-<!--         insert into pessoa (id, nome) values (14, \'Airton França\'); -->
-<!--         insert into pessoa (id, nome) values (15, \'Alex Leal\'); -->
-<!--         insert into pessoa (id, nome) values (16, \'Ocivan Santiago\'); -->
-<!--         insert into pessoa (id, nome) values (17, \'Rodrigo Martins\'); -->
-<!--         insert into pessoa (id, nome) values (18, \'Fabiano Queiroz\'); -->
-<!--         insert into pessoa (id, nome) values (19, \'Kersia Araújo\'); -->
-<!--         insert into pessoa (id, nome) values (20, \'Zenice de Souza\'); -->
-<!--         insert into pessoa (id, nome) values (21, \'Francisca Martins\'); -->
-<!--         insert into apoio values (\'2015-07-27\', 1, 17, 3, 1, 6, 12); -->
-<!--         insert into estudo_biblico values (\'2015-07-27\', \'Achegue-se a Jeová\', \'cl cap. 28 §§ 10-17\', 18, 3); -->
-<!--         insert into escola values (\'2015-07-27\', \'1 Reis 18-20\', 1, \'1 Reis 18:30-40\', 6, 1, \'Débora (n.° 2) — Tema: Mulheres fiéis louvam a Jeová\', \'it-1 pp. 670-671\', 19, 20, 2, 2, \'Como a Bíblia pode ajudar filhos?\', \'igw p. 27 §§ 1-2\', 5, 21, 3, 3); -->
-<!--         insert into servico values (\'2015-07-27\', \'Ofereça as revistas em agosto\', 7, \'Tire proveito do livreto Examine as Escrituras Diariamente\', 16, \'Necessidades locais\', 14, 14); -->
-<!--         insert into discurso_publico values (\'2015-07-27\', \'Guarda ressentimento ou é perdoador?\', \'Érico Teles\', \'Água Fria\', 5); -->
-<!--         insert into estudo_sentinela values (\'2015-07-27\', \'Ele amava as pessoas\', \'w15 15/6 pp. 8-12\', 4);</item> -->
     </string-array>
 
 </resources>

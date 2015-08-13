@@ -1,8 +1,8 @@
 package com.seimos.programacao;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,19 +11,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +35,7 @@ import com.seimos.programacao.manager.PessoaManager;
 import com.seimos.programacao.manager.PessoaManagerImpl;
 import com.seimos.programacao.model.Apoio;
 import com.seimos.programacao.model.Pessoa;
+import com.seimos.programacao.ui.EscolheDataDialogFragment;
 import com.seimos.programacao.ui.ListPessoasAdapter;
 import com.seimos.programacao.ui.MenuPrincipal;
 import com.seimos.programacao.ui.NothingSelectedSpinnerAdapter;
@@ -52,6 +52,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	 * Used to store the last screen title. For use in {@link #restoreActionBar()}.
 	 */
 	private CharSequence mTitle;
+
+	private static Date mBaseDate = new Date();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +102,19 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			getMenuInflater().inflate(R.menu.main, menu);
 			restoreActionBar();
 
-			String today = SimpleDateFormat.getDateInstance().format(new Date());
-
 			MenuItem lblDateTarget = menu.findItem(R.id.lbl_date_target);
-			lblDateTarget.setTitle(today);
+			lblDateTarget.setTitle(SimpleDateFormat.getDateInstance().format(mBaseDate));
+
+			lblDateTarget.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+
+					FragmentManager fragmentManager = getSupportFragmentManager();
+					EscolheDataDialogFragment dialog = new EscolheDataDialogFragment(item);
+					dialog.show(fragmentManager, "escolhe_data");
+					return true;
+				}
+			});
 
 			return true;
 		}
@@ -119,6 +130,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		if (id == R.id.action_settings) {
 			return true;
 		}
+
 		return super.onOptionsItemSelected(item);
 	}
 
@@ -209,64 +221,82 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 
 		private View populateApoioLayout(LayoutInflater inflater, ViewGroup container) {
 
-			Date date = new Date(); //new GregorianCalendar(2015, 9, 1).getTime();
-			Apoio apoio = apoioManager.retrieveDesignacaoSemana(date);
+			Apoio apoio = apoioManager.retrieveDesignacaoSemana(mBaseDate);
 
 			View rootView = null;
 			if (apoio == null) {
-				List<Pessoa> list = pessoaManager.listSorted();
-				String[] pessoas = new String[list.size()];
-				for (int i = 0; i < pessoas.length; i++) {
-					pessoas[i] = list.get(i).getNome();
-				}
-				
-				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas);
-				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-				NothingSelectedSpinnerAdapter nothingSelectedSpinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.contact_spinner_row_nothing_selected, getActivity());
-				
-				rootView = inflater.inflate(R.layout.apoio_cadastrar, container, false);
-
-				EditText textViewLimpeza = (EditText) rootView.findViewById(R.id.editTextLimpeza);
-				Spinner spinnerIndicador = (Spinner) rootView.findViewById(R.id.spinnerIndicador);
-				Spinner spinnerSom = (Spinner) rootView.findViewById(R.id.spinnerSom);
-				Spinner spinnerPalco = (Spinner) rootView.findViewById(R.id.spinnerPalco);
-				Spinner spinnerVolante1 = (Spinner) rootView.findViewById(R.id.spinnerVolante1);
-				Spinner spinnerVolante2 = (Spinner) rootView.findViewById(R.id.spinnerVolante2);
-				Button btnSalvarApoio = (Button) rootView.findViewById(R.id.btnSalvarApoio);
-
-				spinnerIndicador.setAdapter(nothingSelectedSpinnerAdapter);
-				spinnerSom.setAdapter(nothingSelectedSpinnerAdapter);
-				spinnerPalco.setAdapter(nothingSelectedSpinnerAdapter);
-				spinnerVolante1.setAdapter(nothingSelectedSpinnerAdapter);
-				spinnerVolante2.setAdapter(nothingSelectedSpinnerAdapter);
-
-				apoio = new Apoio();
-				
-				spinnerIndicador.setOnItemClickListener(new OnItemClickListener() {
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-						
-					}
-				});
-
+				rootView = criaTelaCadastroApoio(inflater, container);
 			} else {
-				rootView = inflater.inflate(R.layout.apoio, container, false);
-
-				TextView textViewLimpeza = (TextView) rootView.findViewById(R.id.textViewLimpeza);
-				TextView textViewIndicador = (TextView) rootView.findViewById(R.id.textViewIndicador);
-				TextView textViewSom = (TextView) rootView.findViewById(R.id.textViewSom);
-				TextView textViewPalco = (TextView) rootView.findViewById(R.id.textViewPalco);
-				TextView textViewVolante1 = (TextView) rootView.findViewById(R.id.textViewVolante1);
-				TextView textViewVolante2 = (TextView) rootView.findViewById(R.id.textViewVolante2);
-
-				textViewLimpeza.setText(apoio.getLimpeza().toString());
-				textViewIndicador.setText(apoio.getIndicador().getNome());
-				textViewSom.setText(apoio.getSom().getNome());
-				textViewPalco.setText(apoio.getPalco().getNome());
-				textViewVolante1.setText(apoio.getVolante1().getNome());
-				textViewVolante2.setText(apoio.getVolante2().getNome());
+				rootView = criaTelaListagemApoio(inflater, container, apoio);
 			}
 
+			return rootView;
+		}
+
+		private View criaTelaListagemApoio(LayoutInflater inflater, ViewGroup container, Apoio apoio) {
+			View rootView;
+			rootView = inflater.inflate(R.layout.apoio, container, false);
+
+			TextView textViewLimpeza = (TextView) rootView.findViewById(R.id.textViewLimpeza);
+			TextView textViewIndicador = (TextView) rootView.findViewById(R.id.textViewIndicador);
+			TextView textViewSom = (TextView) rootView.findViewById(R.id.textViewSom);
+			TextView textViewPalco = (TextView) rootView.findViewById(R.id.textViewPalco);
+			TextView textViewVolante1 = (TextView) rootView.findViewById(R.id.textViewVolante1);
+			TextView textViewVolante2 = (TextView) rootView.findViewById(R.id.textViewVolante2);
+
+			textViewLimpeza.setText(apoio.getLimpeza().toString());
+			textViewIndicador.setText(apoio.getIndicador().getNome());
+			textViewSom.setText(apoio.getSom().getNome());
+			textViewPalco.setText(apoio.getPalco().getNome());
+			textViewVolante1.setText(apoio.getVolante1().getNome());
+			textViewVolante2.setText(apoio.getVolante2().getNome());
+			return rootView;
+		}
+
+		private View criaTelaCadastroApoio(LayoutInflater inflater, ViewGroup container) {
+			View rootView;
+			//				ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas);
+			ListPessoasAdapter adapter = new ListPessoasAdapter(getActivity());
+			//				adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			NothingSelectedSpinnerAdapter nothingSelectedSpinnerAdapter = new NothingSelectedSpinnerAdapter(adapter, R.layout.contact_spinner_row_nothing_selected, getActivity());
+
+			rootView = inflater.inflate(R.layout.apoio_cadastrar, container, false);
+
+			final EditText textViewLimpeza = (EditText) rootView.findViewById(R.id.editTextLimpeza);
+			final Spinner spinnerIndicador = (Spinner) rootView.findViewById(R.id.spinnerIndicador);
+			final Spinner spinnerSom = (Spinner) rootView.findViewById(R.id.spinnerSom);
+			final Spinner spinnerPalco = (Spinner) rootView.findViewById(R.id.spinnerPalco);
+			final Spinner spinnerVolante1 = (Spinner) rootView.findViewById(R.id.spinnerVolante1);
+			final Spinner spinnerVolante2 = (Spinner) rootView.findViewById(R.id.spinnerVolante2);
+			Button btnSalvarApoio = (Button) rootView.findViewById(R.id.btnSalvarApoio);
+
+			spinnerIndicador.setAdapter(nothingSelectedSpinnerAdapter);
+			spinnerSom.setAdapter(nothingSelectedSpinnerAdapter);
+			spinnerPalco.setAdapter(nothingSelectedSpinnerAdapter);
+			spinnerVolante1.setAdapter(nothingSelectedSpinnerAdapter);
+			spinnerVolante2.setAdapter(nothingSelectedSpinnerAdapter);
+
+			btnSalvarApoio.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					try {
+						Apoio apoio = new Apoio();
+
+						apoio.setData(mBaseDate);
+						apoio.setLimpeza(Integer.valueOf(textViewLimpeza.getText().toString()));
+						apoio.setIndicador((Pessoa) spinnerIndicador.getSelectedItem());
+						apoio.setSom((Pessoa) spinnerSom.getSelectedItem());
+						apoio.setPalco((Pessoa) spinnerPalco.getSelectedItem());
+						apoio.setVolante1((Pessoa) spinnerVolante1.getSelectedItem());
+						apoio.setVolante2((Pessoa) spinnerVolante2.getSelectedItem());
+
+						apoioManager.create(apoio);
+						
+					} catch (Exception e) {
+						Toast.makeText(getActivity(), "Todos os campos corretamente", Toast.LENGTH_SHORT).show();
+					}
+				}
+			});
 			return rootView;
 		}
 
@@ -357,11 +387,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 		}
 
 		private void populateCadastrarPessoa(View rootView) {
-			final ListView listViewPessoas = (ListView) rootView.findViewById(R.id.list_pessoa);
+			ListView listViewPessoas = (ListView) rootView.findViewById(R.id.list_pessoa);
 			listViewPessoas.setFastScrollEnabled(true);
-			List<Pessoa> list = pessoaManager.listSorted();
-			listViewPessoas.setAdapter(new ListPessoasAdapter(getActivity(), list));
-			updateListPessoas(listViewPessoas);
+			final ListPessoasAdapter adapter = new ListPessoasAdapter(getActivity());
+			listViewPessoas.setAdapter(adapter);
 
 			final EditText editNome = (EditText) rootView.findViewById(R.id.editNome);
 			Button btnCadastrarPessoa = (Button) rootView.findViewById(R.id.btnSalvar);
@@ -371,23 +400,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 					if (pessoaManager.create(new Pessoa().setNome(editNome.getText().toString()))) {
 						Toast.makeText(getActivity(), "Sucesso!", Toast.LENGTH_SHORT).show();
 						editNome.setText("");
-						updateListPessoas(listViewPessoas);
+						adapter.refresh();
 					} else {
 						Toast.makeText(getActivity(), "Erro!", Toast.LENGTH_SHORT).show();
 					}
 				}
 			});
-		}
-
-		private void updateListPessoas(ListView listPessoas) {
-			List<Pessoa> list = pessoaManager.listSorted();
-			String[] pessoas = new String[list.size()];
-
-			for (int i = 0; i < list.size(); i++) {
-				pessoas[i] = list.get(i).getNome();
-			}
-
-			listPessoas.setAdapter(new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, android.R.id.text1, pessoas));
 		}
 
 		private void populateCriarProgramacaoLayout(View rootView) {
@@ -398,5 +416,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 			super.onAttach(activity);
 			((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
 		}
+	}
+
+	public void setBaseDate(Date date) {
+		mBaseDate = date;
 	}
 }
