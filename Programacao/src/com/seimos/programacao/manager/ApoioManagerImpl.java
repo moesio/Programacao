@@ -36,13 +36,13 @@ public class ApoioManagerImpl extends GenericManagerImpl<Apoio, ApoioDao> implem
 	@Override
 	public Apoio retrieveDesignacaoSemana(Date data) {
 		List<Apoio> list = getDao().filter(new Filter("data", transformToMonday(data), Restriction.GE));
-		if (list.size() > 0){
-			return list.get(0); 
+		if (list.size() > 0) {
+			return list.get(0);
 		} else {
 			return null;
 		}
 	}
-	
+
 	@Override
 	public boolean create(Apoio apoio) {
 		if (apoio.getData() != null) {
@@ -52,7 +52,8 @@ public class ApoioManagerImpl extends GenericManagerImpl<Apoio, ApoioDao> implem
 	}
 
 	private Date transformToMonday(Date data) {
-		GregorianCalendar calendar = new GregorianCalendar(data.getYear(), data.getMonth(), data.getDate());
+		GregorianCalendar calendar = new GregorianCalendar();
+		calendar.setTime(data);
 		int dow = calendar.get(Calendar.DAY_OF_WEEK);
 		calendar.add(Calendar.DAY_OF_MONTH, 2 - dow);
 		return calendar.getTime();

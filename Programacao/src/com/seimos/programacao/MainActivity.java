@@ -53,6 +53,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	 */
 	private CharSequence mTitle;
 
+	private int lastPosition;
+
 	private static Date mBaseDate = new Date();
 
 	@Override
@@ -78,6 +80,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	@Override
 	public void onNavigationDrawerItemSelected(int position) {
 		// update the main content by replacing fragments
+		setLastPosition(position);
 		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction().replace(R.id.container, PlaceholderFragment.newInstance(position + 1)).commit();
 	}
@@ -291,7 +294,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 						apoio.setVolante2((Pessoa) spinnerVolante2.getSelectedItem());
 
 						apoioManager.create(apoio);
-						
+
+						((MainActivity) getActivity()).onNavigationDrawerItemSelected(1);
+
 					} catch (Exception e) {
 						Toast.makeText(getActivity(), "Todos os campos corretamente", Toast.LENGTH_SHORT).show();
 					}
@@ -421,4 +426,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerF
 	public void setBaseDate(Date date) {
 		mBaseDate = date;
 	}
+
+	public int getLastPosition() {
+		return lastPosition;
+	}
+
+	public void setLastPosition(int position) {
+		lastPosition = position;
+	}
+
 }

@@ -50,7 +50,9 @@ public class EscolheDataDialogFragment extends DialogFragment {
 			public void onClick(View v) {
 				Date date = new Date(datepicker.getYear(), datepicker.getMonth(), datepicker.getDayOfMonth());
 				item.setTitle(SimpleDateFormat.getInstance().format(date));
-				((MainActivity) getActivity()).setBaseDate(date);
+				MainActivity mainActivity = (MainActivity) getActivity();
+				mainActivity.setBaseDate(date);
+				mainActivity.onNavigationDrawerItemSelected(mainActivity.getLastPosition());
 				
 				(EscolheDataDialogFragment.this).dismiss();
 			}
